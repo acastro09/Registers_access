@@ -22,8 +22,8 @@ speed_struct_t reg_set_speed(uint32_t reg, uint32_t speed) {
     }
     uint32_t newreg = reg & ~(SPEED_MASK<<SPEED_SHIFT);
     speed = (speed & SPEED_MASK)<<SPEED_SHIFT;
-    newreg.reg = reg | speed;
-    return (speed_struct_t) {.status = REG_OK, .reg = newreg}
+    newreg = reg | speed;
+    return (speed_struct_t) {.status = REG_OK, .reg = newreg};
 }
 
 uint32_t reg_get_speed(uint32_t reg) {
@@ -36,7 +36,7 @@ uint32_t reg_get_speed(uint32_t reg) {
 int main(void) {
     
     uint32_t reg = 0x00000544;
-    uint32_t speed = reg_get_speed(r.reg);
+    uint32_t speed = reg_get_speed(reg);
     printf("La velocidad es: %X\n", speed);
     speed_struct_t r = reg_set_speed(reg, 5);
     if (r.status == REG_OK){
@@ -46,7 +46,7 @@ int main(void) {
     else {
         printf("Error on the speed value. Overflow. No changes were done\n");
     }
-    speed_struct_t r = reg_set_speed(reg, 5);
+    r = reg_set_speed(reg, 20);
     if (r.status == REG_OK){
         reg = r.reg;
         printf("el nuevo registro es: 0x%08X\n", r.reg);
