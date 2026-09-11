@@ -17,21 +17,13 @@ typedef struct {
 } speed_struct_t;
 
 speed_struct_t reg_set_speed(uint32_t reg, uint32_t speed) {
-    /*if (reg==NULL | speed==NULL){
-        return REG_ERR_NULL;
-    }*/
-    speed_struct_t result;
-    result.reg = reg;
-    if (speed>15){
-        result.status = REG_ERR_VALUE_OUT_OF_RANGE;
-        result.reg = reg;
-        return result;
+    if (speed>SPEED_MASK){
+        return (speed_struct_t){.status = REG_ERR_VALUE_OUT_OF_RANGE, .reg = reg};
     }
-    result.reg = result.reg & ~(SPEED_MASK<<SPEED_SHIFT);
+    uint32_t newreg = reg & ~(SPEED_MASK<<SPEED_SHIFT);
     speed = (speed & SPEED_MASK)<<SPEED_SHIFT;
-    result.reg = result.reg | speed;
-    result.status = REG_OK;
-    return result;
+    newreg.reg = reg | speed;
+    return (speed_struct_t) {.status = REG_OK, .reg = newreg}
 }
 
 uint32_t reg_get_speed(uint32_t reg) {
@@ -42,12 +34,21 @@ uint32_t reg_get_speed(uint32_t reg) {
 
 
 int main(void) {
-    speed_struct_t r;
-    r.reg = 0x00000544;
+    
+    uint32_t reg = 0x00000544;
     uint32_t speed = reg_get_speed(r.reg);
     printf("La velocidad es: %X\n", speed);
-    r = reg_set_speed(r.reg, 5);
-    if (r.status == 0){
+    speed_struct_t r = reg_set_speed(reg, 5);
+    if (r.status == REG_OK){
+        reg = r.reg;
+        printf("el nuevo registro es: 0x%08X\n", r.reg);
+    }
+    else {
+        printf("Error on the speed value. Overflow. No changes were done\n");
+    }
+    speed_struct_t r = reg_set_speed(reg, 5);
+    if (r.status == REG_OK){
+        reg = r.reg;
         printf("el nuevo registro es: 0x%08X\n", r.reg);
     }
     else {
@@ -57,6 +58,6 @@ int main(void) {
     printf("La velocidad es: %X\n", speed);
     assert((reg_set_speed(0xFFFFFFFF, 5)).reg==0xFFFFFFF5);
     assert(reg_get_speed((reg_set_speed(0xFFFFFFFF, 5)).reg)==5);
-    assert(((reg_set_speed(0x554, 5).reg) & ~0xFu)==(0x555 & ~0xFu));
+    assert(((reg_set_speed(0x554, 5).reg) & ~0xFu)==(0x554 & ~0xFu));
     return 0;
 }
