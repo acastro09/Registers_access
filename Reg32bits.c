@@ -46,20 +46,14 @@ int main(void) {
     else {
         printf("Error on the speed value. Overflow. No changes were done\n");
     }
-    r = reg_set_speed(reg, 20);
-    if (r.status == REG_OK){
-        reg = r.reg;
-        printf("el nuevo registro es: 0x%08X\n", r.reg);
-    }
-    else {
-        printf("Error on the speed value. Overflow. No changes were done\n");
-    }
-    speed = reg_get_speed(r.reg);
+    speed = reg_get_speed(reg);
     printf("La velocidad es: %X\n", speed);
     uint32_t antes = reg;
     reg_result_t malo = reg_set_speed(reg, 20);
     assert(malo.status == REG_ERR_VALUE_OUT_OF_RANGE);
     assert(malo.reg ==antes);
+    assert(reg_set_speed(0x554,15).status==REG_OK);
+    assert(reg_set_speed(0x554,16).status!=REG_OK);
     assert((reg_set_speed(0xFFFFFFFF, 5)).reg==0xFFFFFFF5);
     assert(reg_get_speed((reg_set_speed(0xFFFFFFFF, 5)).reg)==5);
     assert(((reg_set_speed(0x554, 5).reg) & ~0xFu)==(0x554 & ~0xFu));
