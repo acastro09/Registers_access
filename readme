@@ -1,4 +1,0 @@
-This repo is a quick practice to learn basics about C code and registers handling.
-
-Compilation:  gcc -Wall -Wextra -std=c11 -o Reg32bits Reg32bits.c
-Running tests: from a console run ./Reg32bits
