@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <Reg32bits.c>
+#include "Reg32bits.c"
 #include <assert.h>
 
 static void test_speed_get (void){
@@ -26,7 +26,7 @@ static void test_out_of_range_speed (void){
 
 }
 
-static void test_boundaries(void):{
+static void test_boundaries(void){
     assert(reg_set_speed(0x554,15).status==REG_OK);
     assert(reg_set_speed(0x554,16).status!=REG_OK);
     assert(reg_get_speed((reg_set_speed(0xFFFFFFFF, 5)).reg)==5);
@@ -39,6 +39,6 @@ int main(void) {
     test_speed_set();
     test_out_of_range_speed();
     test_boundaries();
-    printf("All tests PASSED\n")
+    printf("All tests PASSED\n");
     return 0;
 }

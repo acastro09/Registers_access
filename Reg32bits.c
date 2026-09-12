@@ -1,4 +1,4 @@
-#include <Reg32bits.h>
+#include "Reg32bits.h"
 #define SPEED_SHIFT 0
 #define SPEED_MASK 0xFu
 
