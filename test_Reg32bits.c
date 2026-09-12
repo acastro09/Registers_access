@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Reg32bits.c"
+#include "Reg32bits.h"
 #include <assert.h>
 
 static void test_speed_get (void){
@@ -11,7 +11,7 @@ static void test_speed_get (void){
 static void test_speed_set (void){
     assert(reg_get_speed((reg_set_speed(0xFFFFFFFF, 5)).reg)==5);
     printf ("PASS: speed was set.\n");
-    assert(reg_get_speed((reg_set_speed(0xFFFFFFFF, 5)).status)==REG_OK);
+    assert(reg_set_speed(0xFFFFFFFF, 5).status==REG_OK);
     printf("PASS: status is OK\n");
     assert(((reg_set_speed(0x554, 5).reg) & ~0xFu)==(0x554 & ~0xFu));
     printf ("PASS: no other bits affected\n");
@@ -21,7 +21,7 @@ static void test_speed_set (void){
 static void test_out_of_range_speed (void){
     assert(reg_get_speed((reg_set_speed(0xFFFFFFF5, 20)).reg)==5);
     printf ("PASS: speed was NOT set.\n");
-    assert(reg_get_speed((reg_set_speed(0xFFFFFFFF, 20)).status)==REG_ERR_VALUE_OUT_OF_RANGE);
+    assert((reg_set_speed(0xFFFFFFFF, 20)).status==REG_ERR_VALUE_OUT_OF_RANGE);
     printf("PASS: Not affecting other bits\n");
 
 }
