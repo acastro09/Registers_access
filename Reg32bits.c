@@ -8,10 +8,10 @@ static const reg_components_t regs_table[] = {
     {"width", 0xF, 4, 15},
     {"enable", 0x1, 8, 1},
     {"margin", 0x3, 9, 3},
-    {"reseved", 0xFFFFF8, 11, 0},
+    {"reserved", 0xFFFFF8, 11, 0},
 };
 
-const reg_components_t *get_row_pointer (const char *name){
+static const reg_components_t *get_row_pointer (const char *name){
     const reg_components_t *row = NULL;
     for (size_t i = 0; i< sizeof regs_table/sizeof regs_table[0]; i++){
         if(strcmp(regs_table[i].name,name)==0){
@@ -23,13 +23,26 @@ const reg_components_t *get_row_pointer (const char *name){
 }
 
 reg_result_t reg_set_bits(uint32_t reg, const char *name, uint32_t value) {
-    if (speed>SPEED_MASK){
-        return (reg_result_t){.status = REG_ERR_VALUE_OUT_OF_RANGE, .reg = reg};
+    if (name== NULL){
+        return REG_ERR_NO_PROPER_NAME;
     }
-    uint32_t newreg = reg & ~(SPEED_MASK<<SPEED_SHIFT);
-    speed = (speed & SPEED_MASK)<<SPEED_SHIFT;
-    newreg = newreg | speed;
-    return (reg_result_t) {.status = REG_OK, .reg = newreg};
+    const reg_components_t *row = NULL;
+    row= get_row_pointer(name);
+    if (row == NULL){
+        return REG_ERR_NOT_IN_TABLE;
+    }
+    else{
+        if (value > row->highest_vale){
+            return (reg_result_t){.status = REG_ERR_VALUE_OUT_OF_RANGE, .reg = reg};
+    }   
+        uint32_t mask = row->mask;
+        uint32_t shift = row->shift;
+        uint32_t newreg = reg & ~(mask<<shift);
+        value = (value & mask)<<shift;
+        newreg = newreg | value;
+        return (reg_result_t) {.status = REG_OK, .reg = newreg};
+    }
+
 }
 
 reg_status_t reg_get_bits(uint32_t reg, const char *name, uint32_t *out) {
@@ -37,7 +50,7 @@ reg_status_t reg_get_bits(uint32_t reg, const char *name, uint32_t *out) {
         return REG_ERR_NULL;
     }
     if (name== NULL){
-        return REG_ERR_NO_BITS;
+        return REG_ERR_NO_PROPER_NAME;
     }
     const reg_components_t *row = NULL;
     row= get_row_pointer(name);
