@@ -13,16 +13,16 @@ static const reg_components_t regs_table[] = {
 const get_row_pointer (const char name, const *row){
     for (sizeof regs_table[0]; i++){
         if (regs_table[0].name==name){
-            *row = regs_table[i];
+            row = regs_table[i];
         }
         else {
-            *row = NULL;
+            row = NULL;
         }
     }
     return 0;
 }
 
-reg_result_t reg_set_speed(uint32_t reg, const char name, uint32_t value) {
+reg_result_t reg_set_speed(uint32_t reg, const char *name, uint32_t value) {
     if (speed>SPEED_MASK){
         return (reg_result_t){.status = REG_ERR_VALUE_OUT_OF_RANGE, .reg = reg};
     }
@@ -32,15 +32,15 @@ reg_result_t reg_set_speed(uint32_t reg, const char name, uint32_t value) {
     return (reg_result_t) {.status = REG_OK, .reg = newreg};
 }
 
-reg_status_t reg_get_speed(uint32_t reg, const char name, uint32_t *out) {
-    const *row = NULL;
-    get_row_pointer(name, *row);
-    if (*row == NULL){
+reg_status_t reg_get_speed(uint32_t reg, const char *name, uint32_t *out) {
+    const row = NULL;
+    get_row_pointer(*name, row);
+    if (row == NULL){
         return reg_status_t status = REG_ERR_NULL;
     }
     else{
-        uint32_t mask = *row.mask;
-        uint32_t shift = *row.shift;
+        uint32_t mask = row->mask;
+        uint32_t shift = row->shift;
         *out = reg & (mask<<shift);
         *out = *out >> shift;
         return reg_status_t status = REG_OK;

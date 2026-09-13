@@ -23,7 +23,7 @@ typedef struct {
 } reg_components_t;
 
 
-reg_result_t reg_set_bits(uint32_t reg, const char name, uint32_t value);
-reg_status_t reg_get_bits(uint32_t reg, const char name, uint32_t *out);
+reg_result_t reg_set_bits(uint32_t reg, const char *name, uint32_t value);
+reg_status_t reg_get_bits(uint32_t reg, const char *name, uint32_t *out);
 
 #endif
