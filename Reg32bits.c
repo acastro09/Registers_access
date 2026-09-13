@@ -1,6 +1,7 @@
 #include "Reg32bits.h"
 #define SPEED_SHIFT 0
 #define SPEED_MASK 0xFu
+#include <string.h>
 
 static const reg_components_t regs_table[] = {
     {"speed", 0xF, 0, 15},
@@ -10,10 +11,11 @@ static const reg_components_t regs_table[] = {
     {"reseved", 0xFFFFF8, 11, 0},
 };
 
-const *reg_components_t get_row_pointer (const char *name){
-    for (sizeof regs_table[i]; i++){
-        if (regs_table[i].name==strcmp(name)){
-            &row = regs_table[i];
+const reg_components_t *get_row_pointer (const char *name){
+    reg_components_t row == NULL;
+    for (size_t = 0; i< sizeof regs_table/sizeof regs_table[i]; i++){
+        if(strcmp(regs_table[i].name,name)==0){
+            row = &regs_table[i];
         }
     }
     return row;
