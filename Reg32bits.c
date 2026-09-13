@@ -22,7 +22,7 @@ const reg_components_t *get_row_pointer (const char *name){
     return row;
 }
 
-reg_result_t reg_set_speed(uint32_t reg, const char *name, uint32_t value) {
+reg_result_t reg_set_bits(uint32_t reg, const char *name, uint32_t value) {
     if (speed>SPEED_MASK){
         return (reg_result_t){.status = REG_ERR_VALUE_OUT_OF_RANGE, .reg = reg};
     }
@@ -32,23 +32,24 @@ reg_result_t reg_set_speed(uint32_t reg, const char *name, uint32_t value) {
     return (reg_result_t) {.status = REG_OK, .reg = newreg};
 }
 
-reg_status_t reg_get_speed(uint32_t reg, const char *name, uint32_t *out) {
+reg_status_t reg_get_bits(uint32_t reg, const char *name, uint32_t *out) {
     if (out == NULL){
-        return INVALID_DIR;
+        return REG_ERR_NULL;
+    }
+    if (name== NULL){
+        return REG_ERR_NO_BITS;
     }
     const reg_components_t *row = NULL;
     row= get_row_pointer(name);
     if (row == NULL){
-        reg_status_t status = REG_ERR_NULL;
-        return status;
+        return REG_ERR_NOT_IN_TABLE;
     }
     else{
         uint32_t mask = row->mask;
         uint32_t shift = row->shift;
         *out = reg & (mask<<shift);
         *out = *out >> shift;
-        reg_status_t status = REG_OK;
-        return status;
+        return REG_OK;
     }
 }
 
