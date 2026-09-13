@@ -10,13 +10,10 @@ static const reg_components_t regs_table[] = {
     {"reseved", 0xFFFFF8, 11, 0},
 };
 
-const reg_components_t get_row_pointer (const char *name, const reg_components_t *row){
-    for (sizeof regs_table[0]; i++){
-        if (regs_table[0].name==name){
-            row = regs_table[i];
-        }
-        else {
-            row = NULL;
+const *reg_components_t get_row_pointer (const char *name){
+    for (sizeof regs_table[i]; i++){
+        if (regs_table[i].name==strcmp(name)){
+            &row = regs_table[i];
         }
     }
     return row;
