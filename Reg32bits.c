@@ -12,10 +12,11 @@ static const reg_components_t regs_table[] = {
 };
 
 const reg_components_t *get_row_pointer (const char *name){
-    reg_components_t row == NULL;
-    for (size_t = 0; i< sizeof regs_table/sizeof regs_table[i]; i++){
+    const reg_components_t *row = NULL;
+    for (size_t i = 0; i< sizeof regs_table/sizeof regs_table[0]; i++){
         if(strcmp(regs_table[i].name,name)==0){
             row = &regs_table[i];
+            break;
         }
     }
     return row;
@@ -32,17 +33,22 @@ reg_result_t reg_set_speed(uint32_t reg, const char *name, uint32_t value) {
 }
 
 reg_status_t reg_get_speed(uint32_t reg, const char *name, uint32_t *out) {
+    if (out == NULL){
+        return INVALID_DIR;
+    }
     const reg_components_t *row = NULL;
-    row= get_row_pointer(name, row);
+    row= get_row_pointer(name);
     if (row == NULL){
-        return reg_status_t status = REG_ERR_NULL;
+        reg_status_t status = REG_ERR_NULL;
+        return status;
     }
     else{
         uint32_t mask = row->mask;
         uint32_t shift = row->shift;
         *out = reg & (mask<<shift);
         *out = *out >> shift;
-        return reg_status_t status = REG_OK;
+        reg_status_t status = REG_OK;
+        return status;
     }
 }
 

@@ -7,6 +7,7 @@ typedef enum {
     REG_OK = 0,
     REG_ERR_VALUE_OUT_OF_RANGE,
     REG_ERR_NULL,
+    INVALID_DIR,
 } reg_status_t;
 
 typedef struct reg_status_t {
