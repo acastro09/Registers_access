@@ -10,7 +10,7 @@ static const reg_components_t regs_table[] = {
     {"reseved", 0xFFFFF8, 11, 0},
 };
 
-const get_row_pointer (const char name, const *row){
+const reg_components_t get_row_pointer (const char *name, const reg_components_t *row){
     for (sizeof regs_table[0]; i++){
         if (regs_table[0].name==name){
             row = regs_table[i];
@@ -19,7 +19,7 @@ const get_row_pointer (const char name, const *row){
             row = NULL;
         }
     }
-    return 0;
+    return row;
 }
 
 reg_result_t reg_set_speed(uint32_t reg, const char *name, uint32_t value) {
@@ -33,8 +33,8 @@ reg_result_t reg_set_speed(uint32_t reg, const char *name, uint32_t value) {
 }
 
 reg_status_t reg_get_speed(uint32_t reg, const char *name, uint32_t *out) {
-    const row = NULL;
-    get_row_pointer(*name, row);
+    const reg_components_t *row = NULL;
+    row= get_row_pointer(name, row);
     if (row == NULL){
         return reg_status_t status = REG_ERR_NULL;
     }
