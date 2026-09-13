@@ -11,10 +11,22 @@ typedef enum {
 
 typedef struct {
     reg_status_t status;
-    uint32_t reg;
-} reg_result_t;
+    const char *name;
+    uint4_t mask;
+    int shift;
+    int highest_value;
 
-reg_result_t reg_set_speed(uint32_t reg, uint32_t speed);
-uint32_t reg_get_speed(uint32_t reg);
+} reg_components_t;
+
+static const reg_components_t regs_table[] = {
+    {"speed", 0xF, 0, 15},
+    {"width", 0xF, 4, 15},
+    {"enable", 0x1, 8, 1},
+    {"margin", 0x3, 9, 3},
+    {"reseved", 0xFFFFF8, 11, 0},
+};
+
+reg_result_t reg_set_bits(uint32_t reg, const char &name, uint32_t value);
+uint32_t reg_get_bits(uint32_t reg, const char &name);
 
 #endif
