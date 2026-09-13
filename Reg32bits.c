@@ -24,15 +24,15 @@ static const reg_components_t *get_row_pointer (const char *name){
 
 reg_result_t reg_set_bits(uint32_t reg, const char *name, uint32_t value) {
     if (name== NULL){
-        return REG_ERR_NO_PROPER_NAME;
+        return (reg_result_t){.status = REG_ERR_NO_PROPER_NAME, .reg = reg};
     }
     const reg_components_t *row = NULL;
     row= get_row_pointer(name);
     if (row == NULL){
-        return REG_ERR_NOT_IN_TABLE;
+        return (reg_result_t){.status = REG_ERR_NOT_IN_TABLE , .reg = reg};
     }
     else{
-        if (value > row->highest_vale){
+        if (value > row->highest_value){
             return (reg_result_t){.status = REG_ERR_VALUE_OUT_OF_RANGE, .reg = reg};
     }   
         uint32_t mask = row->mask;

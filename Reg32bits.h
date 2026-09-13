@@ -20,7 +20,7 @@ typedef struct {
     const char *name;
     uint32_t mask;
     int shift;
-    int highest_value;
+    uint32_t highest_value;
 
 } reg_components_t;
 
