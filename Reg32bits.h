@@ -8,7 +8,7 @@ typedef enum {
     REG_ERR_VALUE_OUT_OF_RANGE,
     REG_ERR_NULL,
     REG_ERR_NOT_IN_TABLE,
-    EG_ERR_NO_BITS,
+    REG_ERR_NO_BITS,
 } reg_status_t;
 
 typedef struct reg_status_t {
