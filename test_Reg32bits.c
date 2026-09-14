@@ -51,14 +51,15 @@ static void test_boundaries(void){
 static void test_invalid_name_get(void){
     uint32_t out=0xDEADBEEF;
     assert((reg_get_bits(0xFFFFFFFF, "test", &out))==REG_ERR_NOT_IN_TABLE);
-    assert(out==0XDEADBEEF);
+    assert(out==0xDEADBEEF);
     printf("PASS: No proper lecture since incorrect name.\n");
 }
 
 
 static void test_invalid_name_set(void){
-    assert((reg_set_bits(0xFFFFFFFF, "test", 1)).status==REG_ERR_NOT_IN_TABLE);
-    assert((reg_set_bits(0xFFFFFFFF, "test", 1)).reg==0xFFFFFFFF);
+    reg_result_t newreg=reg_set_bits(0xFFFFFFFF, "test", 1);
+    assert(newreg.status==REG_ERR_NOT_IN_TABLE);
+    assert(newreg.reg==0xFFFFFFFF);
     printf("PASS: No changes since invalid space name.\n");
 }
 
@@ -71,8 +72,9 @@ static void test_invalid_null_name_get(void){
 }
 
 static void test_invalid_null_name_set(void){
-    assert((reg_set_bits(0xFFFFFFFF, NULL, 1)).status==REG_ERR_NO_PROPER_NAME);
-    assert((reg_set_bits(0xFFFFFFFF, NULL, 1)).reg==0xFFFFFFFF);
+    reg_result_t newreg=reg_set_bits(0xFFFFFFFF, NULL, 1);
+    assert(newreg.status==REG_ERR_NO_PROPER_NAME);
+    assert(newreg.reg==0xFFFFFFFF);
     printf("PASS: No changes since NULL space name.\n");
 }
 
