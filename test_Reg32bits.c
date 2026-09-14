@@ -9,8 +9,6 @@ static void test_speed_get (void){
     assert((reg_get_bits(0x00000554u, "speed", &out)==REG_OK));
     assert(out==0x4u);
     printf ("PASS: get speed\n");
-    assert((reg_get_bits(0x00000554u,"speed", NULL)==REG_ERR_NULL));
-    printf ("PASS: NULL output pointer handled\n");
 
 }
 
@@ -78,6 +76,13 @@ static void test_invalid_null_name_set(void){
     printf("PASS: No changes since NULL space name.\n");
 }
 
+static void test_invalid_null_out_get(void){
+    uint32_t out=0xDEADBEEF;
+    assert((reg_get_bits(0x00000554u,"speed", NULL)==REG_ERR_NULL));
+    assert(out = 0xDEADBEEF);
+    printf ("PASS: NULL output pointer handled\n");
+}
+
 
 int main(void) {
     test_speed_get();
@@ -88,6 +93,7 @@ int main(void) {
     test_invalid_null_name_get();
     test_invalid_null_name_set();
     test_invalid_name_get();
+    test_invalid_null_out_get();
     printf("All tests Finished\n");
     return 0;
 }
