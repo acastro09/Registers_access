@@ -9,7 +9,6 @@ static void test_speed_get (void){
     assert((reg_get_bits(0x00000554u, "speed", &out)==REG_OK));
     assert(out==0x4u);
     printf ("PASS: get speed\n");
-
 }
 
 
@@ -22,7 +21,6 @@ static void test_speed_set (void){
     printf("PASS: status is OK on speed update\n");
     assert(((reg_set_bits(0x554,"speed", 5).reg) & ~0xFu)==(0x554 & ~0xFu));
     printf ("PASS: no other bits affected when updating speed\n");
-
 }
 
 static void test_out_of_range_speed (void){
@@ -32,7 +30,6 @@ static void test_out_of_range_speed (void){
     printf ("PASS: speed was NOT set.\n");
     assert((reg_set_bits(0xFFFFFFFF, "speed", 20)).status==REG_ERR_VALUE_OUT_OF_RANGE);
     printf("PASS: Not affecting other bits when modifying speed\n");
-
 }
 
 
@@ -77,9 +74,7 @@ static void test_invalid_null_name_set(void){
 }
 
 static void test_invalid_null_out_get(void){
-    uint32_t out=0xDEADBEEF;
     assert((reg_get_bits(0x00000554u,"speed", NULL)==REG_ERR_NULL));
-    assert(out = 0xDEADBEEF);
     printf ("PASS: NULL output pointer handled\n");
 }
 
