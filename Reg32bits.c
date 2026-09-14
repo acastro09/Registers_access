@@ -58,6 +58,3 @@ reg_status_t reg_get_bits(uint32_t reg, const char *name, uint32_t *out) {
     return REG_OK;
     
 }
-
-
-
