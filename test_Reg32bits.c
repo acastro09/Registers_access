@@ -22,10 +22,13 @@ static void test_bits_set (void){
     uint32_t out=0xDEADBEEF;
     assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"speed", 0x5u)).reg,"speed", &out)==REG_OK);
     assert(out==0x5u);
+    out=0xDEADBEEF;
     assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"width", 0x5u)).reg,"width", &out)==REG_OK);
     assert(out==0x5u);
+    out=0xDEADBEEF;
     assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"enable", 0x1u)).reg,"enable", &out)==REG_OK);
     assert(out==0x1u);
+    out=0xDEADBEEF;
     assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"margin", 0x2u)).reg,"margin", &out)==REG_OK);
     assert(out==0x2u);
     printf ("PASS: bits were set.\n");
@@ -39,12 +42,17 @@ static void test_bits_set (void){
     reg= reg_set_bits(reg,"enable", 1).reg;
     reg= reg_set_bits(reg,"margin", 2).reg;
     assert (reg==0x00000555u);
-    printf("PASS: status is OK on speed update\n");
+    printf("PASS: status is OK on bits update\n");
     reg = 0x00000000;
     assert(((reg_set_bits(reg,"speed", 5).reg) & ~0xFu)==(0x005 & ~0xFu));
     assert(((reg_set_bits(reg,"width", 5).reg) & ~0xF0u)==(0x050 & ~0xF0u));
     assert(((reg_set_bits(reg,"enable", 1).reg) & ~0x100u)==(0x100 & ~0x100u));
     assert(((reg_set_bits(reg,"margin", 2).reg) & ~0x600u)==(0x400 & ~0x600u));
+    reg = 0xFFFFFFFF;
+    assert(((reg_set_bits(reg,"speed", 5).reg) & ~0xFu)==(0xFFFFFFF5 & ~0xFu));
+    assert(((reg_set_bits(reg,"width", 5).reg) & ~0xF0u)==(0xFFFFFF5F & ~0xF0u));
+    assert(((reg_set_bits(reg,"enable", 0).reg) & ~0x100u)==(0xFFFFFEFF & ~0x100u));
+    assert(((reg_set_bits(reg,"margin", 2).reg) & ~0x600u)==(0xFFFFFDFF & ~0x600u));
     printf ("PASS: no other bits affected when updating bits\n");
 }
 
@@ -63,7 +71,7 @@ static void test_out_of_range_bits (void){
     assert((reg_set_bits(0xFFFFFFFF, "width", 20)).status==REG_ERR_VALUE_OUT_OF_RANGE);
     assert((reg_set_bits(0xFFFFFFFF, "enable", 20)).status==REG_ERR_VALUE_OUT_OF_RANGE);
     assert((reg_set_bits(0xFFFFFFFF, "margin", 20)).status==REG_ERR_VALUE_OUT_OF_RANGE);
-    printf("PASS: Not affecting other bits when modifying speed\n");
+    printf("PASS: Not affecting other bits when modifying specific spaces\n");
 }
 
 
@@ -73,7 +81,25 @@ static void test_boundaries(void){
     assert(reg_set_bits(0x554,"speed",16).status!=REG_OK);
     assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"speed", 5)).reg,"speed", &out)==REG_OK);
     assert(out==0x5u);
-    printf("PASS: Speed boundaries well defined\n");
+
+    out=0xDEADBEEF;
+    assert(reg_set_bits(0x554,"width",15).status==REG_OK);
+    assert(reg_set_bits(0x554,"width",16).status!=REG_OK);
+    assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"width", 5)).reg,"width", &out)==REG_OK);
+    assert(out==0x5u);
+
+    out=0xDEADBEEF;
+    assert(reg_set_bits(0x554,"enable",1).status==REG_OK);
+    assert(reg_set_bits(0x554,"enable",2).status!=REG_OK);
+    assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"enable", 1)).reg,"enable", &out)==REG_OK);
+    assert(out==0x1u);
+
+    out=0xDEADBEEF;
+    assert(reg_set_bits(0x554,"margin",3).status==REG_OK);
+    assert(reg_set_bits(0x554,"margin",4).status!=REG_OK);
+    assert(reg_get_bits((reg_set_bits(0xFFFFFFFF,"margin", 3)).reg,"margin", &out)==REG_OK);
+    assert(out==0x3u);
+    printf("PASS: Bits boundaries well defined\n");
 }
 
 
