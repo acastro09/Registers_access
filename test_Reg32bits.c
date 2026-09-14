@@ -48,8 +48,17 @@ static void test_boundaries(void){
 }
 
 
+static void test_invalid_name_get(void){
+    uint32_t out=0xDEADBEEF;
+    assert((reg_get_bits(0xFFFFFFFF, "test", &out))==REG_ERR_NOT_IN_TABLE);
+    assert(out==0XDEADBEEF);
+    printf("PASS: No proper lecture since incorrect name.\n");
+}
+
+
 static void test_invalid_name_set(void){
     assert((reg_set_bits(0xFFFFFFFF, "test", 1)).status==REG_ERR_NOT_IN_TABLE);
+    assert((reg_set_bits(0xFFFFFFFF, "test", 1)).reg==0xFFFFFFFF);
     printf("PASS: No changes since invalid space name.\n");
 }
 
@@ -57,7 +66,14 @@ static void test_invalid_name_set(void){
 static void test_invalid_null_name_get(void){
     uint32_t out=0xDEADBEEF;
     assert((reg_get_bits(0x00000554u, NULL, &out)==REG_ERR_NO_PROPER_NAME));
-    printf ("PASS: get speed\n");
+    assert(out==0xDEADBEEF);
+    printf ("PASS: Not able to get values when name is null\n");
+}
+
+static void test_invalid_null_name_set(void){
+    assert((reg_set_bits(0xFFFFFFFF, NULL, 1)).status==REG_ERR_NO_PROPER_NAME);
+    assert((reg_set_bits(0xFFFFFFFF, NULL, 1)).reg==0xFFFFFFFF);
+    printf("PASS: No changes since NULL space name.\n");
 }
 
 
@@ -68,6 +84,8 @@ int main(void) {
     test_boundaries();
     test_invalid_name_set();
     test_invalid_null_name_get();
+    test_invalid_null_name_set();
+    test_invalid_name_get();
     printf("All tests Finished\n");
     return 0;
 }
